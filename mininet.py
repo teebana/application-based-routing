@@ -10,7 +10,7 @@ from mininet.cli import CLI
 class ProjTopo(Topo):
 
 	def build(self, h = 1):
-		gatewayIP = '10.0.0.69' # establish a default gateway
+		gatewayIP = '10.0.1.254' # establish a default gateway
 
 		# create NAT node for network
 		nat = self.addNode('nat', cls=NAT, ip=gatewayIP)
@@ -27,7 +27,7 @@ class ProjTopo(Topo):
 		self.addLink(s1, s2, port1=3, port2=3, bw=200) # high bandwidth link
 
 		# connect consumer switch to host
-		host = self.addHost('h1', ip='10.0.01', defaultRoute='via %s' % gatewayIP) # TODO: figure out what defaultRoute argument means
+		host = self.addHost('h1', ip='10.0.1.1', defaultRoute='via %s' % gatewayIP) # TODO: figure out what defaultRoute argument means
 		self.addLink(s2, host, port1=1)
 
 

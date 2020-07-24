@@ -44,10 +44,10 @@ class AppRouting(app_manager.RyuApp):
 
         # create flow entries (outgoing to internet)
         matches = []
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto = 0x06))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto = 0x06))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto=0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto=0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto=0x06))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto=0x06))
 
         # create action entry (outgoing)
         action = parser.OFPActionOutput(3,0)
@@ -61,6 +61,21 @@ class AppRouting(app_manager.RyuApp):
         action = parser.OFPActionOutput(2,0)
         # add default outgoing flow entry
         self.add_flow(datapath, 2, match, action)
+
+        # create default incoming match to host's IP address
+        match = parser.OFPMatch(eth_type=0x800, ipv4_dst='10.0.1.1')
+        # create incoming action with priority 10
+        action = parser.OFPActionOutput(1,0)
+        # add default incoming flow entry
+        self.add_flow(datapath, 11, match, action)
+
+        # create default incoming match to host's IP address
+        match = parser.OFPMatch(eth_type=0x800, ipv4_src='10.0.1.1')
+        # create incoming action with priority 10
+        action = parser.OFPActionOutput(2,0)
+        # add default incoming flow entry
+        self.add_flow(datapath, 11, match, action)
+
 
         # create default incoming match
         match = parser.OFPMatch()
