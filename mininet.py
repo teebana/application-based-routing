@@ -16,12 +16,12 @@ class ProjTopo(Topo):
 		nat = self.addNode('nat', cls=NAT, ip=gatewayIP)
 
 		# edge switch to connect with NAT node
-		s1 = self.addSwitch('s1') # TODO: might have to put a DPID
+		s1 = self.addSwitch('s1', dpid = "00:00:00:00:00:00:00:01")
 		self.addLink(s1, nat, port1=1, port2=1)
 
 
 		# consumer edge switch to connect to host
-		s2 = self.addSwitch('s2')
+		s2 = self.addSwitch('s2', dpid = "00:00:00:00:00:00:00:02")
 		# connect consumer switch to NAT switch
 		self.addLink(s1, s2, port1=2, port2=2, bw=50) # generic link
 		self.addLink(s1, s2, port1=3, port2=3, bw=200) # high bandwidth link
