@@ -23,13 +23,13 @@ class AppRouting(app_manager.RyuApp):
         self.logger.info("DPID is %s", dpid)
 
         # nat switch case
-        if (dpid == "00:00:00:00:00:00:00:01"):
+        if (int(dpid[14:16]) == 1):
             self.logger.info("nat switch")
-            nat_switch(ev)
+            self.nat_switch(ev)
         # consumer switch case    
-        elif (dpid == "00:00:00:00:00:00:00:02"):
+        elif (int(dpid[14:16]) == 2):
             self.logger.info("Consumer switch")
-            consumer_switch(ev)
+            self.consumer_switch(ev)
         else:
             self.logger.info("Hit else statment, DPID is %s", dpid)
 
@@ -43,30 +43,31 @@ class AppRouting(app_manager.RyuApp):
         self.logger.info("DPID is %s", dpid)
 
         # create flow entries (outgoing to internet)
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80))
+        matches = []
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto = 0x06))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto = 0x06))
 
         # create action entry (outgoing)
         action = parser.OFPActionOutput(3,0)
         # add flow entries (outgoing)
         for match in matches:
-            add_flow(datapath, 10, match, action)   
+            self.add_flow(datapath, 10, match, action)   
 
         # create default outgoing match
         match = parser.OFPMatch(in_port=1)
         # create default outgoing action
         action = parser.OFPActionOutput(2,0)
         # add default outgoing flow entry
-        add_flow(datapath, 1, match, action)
+        self.add_flow(datapath, 2, match, action)
 
         # create default incoming match
         match = parser.OFPMatch()
         # create default incoming action
         action = parser.OFPActionOutput(1,0)
         # add default incoming flow entry
-        add_flow(datapath, 1, match, action)
+        self.add_flow(datapath, 1, match, action)
 
     def nat_switch(self, ev):
         # get switch                                      
@@ -79,31 +80,31 @@ class AppRouting(app_manager.RyuApp):
 
         # create flow entries (incoming to nat switch)
         matches = []
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_src=443))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_src=80))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_src=443))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_src=80))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto = 0x06))
+        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto = 0x06))
 
 
         # create action entry (incoming)
         actions = parser.OFPActionOutput(3,0)
         # add flow entries (incoming)
         for match in matches:
-            add_flow(datapath, 10, match, actions)
+            self.add_flow(datapath, 10, match, actions)
 
         # create default incoming match
         match = parser.OFPMatch(in_port=1)
         # create default incoming action
         action = parser.OFPActionOutput(2,0)
         # add default incoming flow entry
-        add_flow(datapath, 1, match, action)
+        self.add_flow(datapath, 1, match, action)
 
         # create default outgoing match
         match = parser.OFPMatch()
         # create default outgoing action
         action = parser.OFPActionOutput(1,0)
         # add default outgoing flow entry
-        add_flow(datapath, 1, match, action)
+        self.add_flow(datapath, 1, match, action)
         
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
         ofproto = datapath.ofproto
