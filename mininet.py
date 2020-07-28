@@ -13,7 +13,7 @@ class ProjTopo(Topo):
 		gatewayIP = '10.0.1.254' # establish a default gateway
 
 		# create NAT node for network
-		nat = self.addNode('nat', cls=NAT, ip=gatewayIP)
+		nat = self.addNode('nat', cls=NAT, ip=gatewayIP, inNamespace=False)
 
 		# edge switch to connect with NAT node
 		s1 = self.addSwitch('s1', dpid = "00:00:00:00:00:00:00:01")
@@ -28,7 +28,7 @@ class ProjTopo(Topo):
 
 		# connect consumer switch to host
 		host = self.addHost('h1', ip='10.0.1.1', defaultRoute='via %s' % gatewayIP) # TODO: figure out what defaultRoute argument means
-		self.addLink(s2, host, port1=1)
+		self.addLink(s2, host, cls = TCLink, port1=1)
 
 
 def simpleTest():
@@ -37,7 +37,6 @@ def simpleTest():
 	natSubnet = '10.0.0.0/23'
 	net = Mininet(topo=topo, controller=None, autoSetMacs=True, autoStaticArp=True,ipBase=natSubnet)
 	net.addController('c0', controller=RemoteController, ip="127.0.0.1", port=6633, protocols="OpenFlow13")
-
 	net.start()
 
 	CLI(net)
