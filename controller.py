@@ -5,6 +5,12 @@ from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4
 
+HIGH_BW_LINK = 3
+GENERIC_BW_LINK = 2
+HOST_LINK = 1
+INTERNET_LINK = 1
+
+
 class AppRouting(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
@@ -44,43 +50,43 @@ class AppRouting(app_manager.RyuApp):
 
         # create flow entries (outgoing to internet)
         matches = []
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto=0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto=0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto=0x06))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto=0x06))
+        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=443, ip_proto=0x11))
+        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=80, ip_proto=0x11))
+        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06))
+        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=80, ip_proto=0x06))
 
         # create action entry (outgoing)
-        action = parser.OFPActionOutput(3,0)
+        action = parser.OFPActionOutput(HIGH_BW_LINK,0)
         # add flow entries (outgoing)
         for match in matches:
             self.add_flow(datapath, 10, match, action)   
 
         # create default outgoing match
-        match = parser.OFPMatch(in_port=1)
+        match = parser.OFPMatch(in_port=HOST_LINK)
         # create default outgoing action
-        action = parser.OFPActionOutput(2,0)
+        action = parser.OFPActionOutput(GENERIC_BW_LINK,0)
         # add default outgoing flow entry
         self.add_flow(datapath, 2, match, action)
 
         # create default incoming match to host's IP address
         match = parser.OFPMatch(eth_type=0x800, ipv4_dst='10.0.1.1')
         # create incoming action with priority 10
-        action = parser.OFPActionOutput(1,0)
+        action = parser.OFPActionOutput(HOST_LINK,0)
         # add default incoming flow entry
         self.add_flow(datapath, 11, match, action)
 
-        # create default incoming match to host's IP address
-        match = parser.OFPMatch(eth_type=0x800, ipv4_src='10.0.1.1')
-        # create incoming action with priority 10
-        action = parser.OFPActionOutput(2,0)
-        # add default incoming flow entry
-        self.add_flow(datapath, 11, match, action)
+        # # create default incoming match to host's IP address
+        # match = parser.OFPMatch(eth_type=0x800, ipv4_src='10.0.1.1')
+        # # create incoming action with priority 10
+        # action = parser.OFPActionOutput(GENERIC_BW_LINK,0)
+        # # add default incoming flow entry
+        # self.add_flow(datapath, 11, match, action)
 
 
         # create default incoming match
         match = parser.OFPMatch()
         # create default incoming action
-        action = parser.OFPActionOutput(1,0)
+        action = parser.OFPActionOutput(HOST_LINK,0)
         # add default incoming flow entry
         self.add_flow(datapath, 1, match, action)
 
@@ -95,29 +101,29 @@ class AppRouting(app_manager.RyuApp):
 
         # create flow entries (incoming to nat switch)
         matches = []
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=443, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, udp_dst=80, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=443, ip_proto = 0x06))
-        matches.append(parser.OFPMatch(in_port=1, eth_type=0x800, tcp_dst=80, ip_proto = 0x06))
+        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=443, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=80, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto = 0x06))
+        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=80, ip_proto = 0x06))
 
 
         # create action entry (incoming)
-        actions = parser.OFPActionOutput(3,0)
+        actions = parser.OFPActionOutput(HIGH_BW_LINK,0)
         # add flow entries (incoming)
         for match in matches:
             self.add_flow(datapath, 10, match, actions)
 
         # create default incoming match
-        match = parser.OFPMatch(in_port=1)
+        match = parser.OFPMatch(in_port=INTERNET_LINK)
         # create default incoming action
-        action = parser.OFPActionOutput(2,0)
+        action = parser.OFPActionOutput(GENERIC_BW_LINK,0)
         # add default incoming flow entry
-        self.add_flow(datapath, 1, match, action)
+        self.add_flow(datapath, 3, match, action)
 
         # create default outgoing match
         match = parser.OFPMatch()
         # create default outgoing action
-        action = parser.OFPActionOutput(1,0)
+        action = parser.OFPActionOutput(INTERNET_LINK,0)
         # add default outgoing flow entry
         self.add_flow(datapath, 1, match, action)
         
