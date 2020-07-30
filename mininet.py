@@ -6,10 +6,12 @@ from mininet.nodelib import NAT
 from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.cli import CLI
+import time
 
 class ProjTopo(Topo):
 
 	def build(self, h = 1):
+
 		gatewayIP = '10.0.1.254' # establish a default gateway
 
 		# create NAT node for network
@@ -33,13 +35,25 @@ class ProjTopo(Topo):
 
 def simpleTest():
 
-	topo = ProjTopo(1)
+	topo = ProjTopo()
 	natSubnet = '10.0.0.0/23'
 	net = Mininet(topo=topo, controller=None, autoSetMacs=True, autoStaticArp=True,ipBase=natSubnet)
 	net.addController('c0', controller=RemoteController, ip="127.0.0.1", port=6633, protocols="OpenFlow13")
 	net.start()
 
 	CLI(net)
+
+	while(1):
+
+		s1_flows = net.switches[0].cmd('ovs-ofctl dump-flows s1')
+		s2_flows = net.switches[1].cmd('ovs-ofctl dump-flows s2')
+
+		print(s1_flows)
+		print(s2_flows)
+
+		time.sleep(5)
+
+
 
 	net.stop()
 

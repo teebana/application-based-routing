@@ -26,65 +26,134 @@ class AppRouting(app_manager.RyuApp):
         self.options = []
 
         self.root = tk.Tk()
-        self.root.title("Select video streaming applications to prioritise")
+        self.root.title("Application-based routing")
 
         bgimage = tk.PhotoImage(file = "images/background_1.png")
         w = bgimage.width()
         h = bgimage.height()
-        self.root.geometry("%dx%d+50+30" % (w,h))
-        ## Create canvas for background image
+        self.root.geometry("%dx%d+50+30" % (650,h))
+        # Create canvas for background image
         cv = tk.Canvas(width=w, height=h)
         cv.pack(side='top', fill='both', expand='yes')
         # cv.create_image(0, 0, image=bgimage, anchor='nw')
         cv.create_image(0, 0, anchor='nw')
 
-        ## Create buttons
-        netflix_img = tk.PhotoImage(file="images/netflix.png")
-        netflix = tk.Checkbutton(cv, image=netflix_img, command=self.netflixvar)
+        # Create buttons
+        netflix_img = tk.PhotoImage(file="images/netflix_50.png")
+        netflix = tk.Checkbutton(cv, image=netflix_img, command=self.netflixButton)
         netflix.place(anchor='nw', x=120, y=250)
 
-        youtube_img = tk.PhotoImage(file="images/youtube.png")
-        youtube = tk.Checkbutton(cv, image=youtube_img, command=self.youtubevar)
-        youtube.place(anchor='nw', x=400, y=250)
+        youtube_img = tk.PhotoImage(file="images/youtube_50.png")
+        youtube = tk.Checkbutton(cv, image=youtube_img, command=self.youtubeButton)
+        youtube.place(anchor='nw', x=240, y=250)
 
-        twitch_img = tk.PhotoImage(file="images/twitch.png")
-        twitch = tk.Checkbutton(cv, image=twitch_img, command=self.twitchvar)
-        twitch.place(anchor='nw', x=720, y=250)
+        twitch_img = tk.PhotoImage(file="images/twitch_50.png")
+        twitch = tk.Checkbutton(cv, image=twitch_img, command=self.twitchButton)
+        twitch.place(anchor='nw', x=360, y=250)
+
+        primevideo_img = tk.PhotoImage(file="images/primevideo_50.png")
+        primevideo = tk.Checkbutton(cv, image=primevideo_img, command=self.primeVideoButton)
+        primevideo.place(anchor='nw', x=120, y=350)
+
+        appletv_img = tk.PhotoImage(file="images/appletv_50.png")
+        appletv = tk.Checkbutton(cv, image=appletv_img, command=self.appleTVButton)
+        appletv.place(anchor='nw', x=240, y=350)
+
+        disneyplus_img = tk.PhotoImage(file="images/disneyplus_50.png")
+        disneyplus = tk.Checkbutton(cv, image=disneyplus_img, command=self.disneyPlusButton)
+        disneyplus.place(anchor='nw', x=360, y=350)
+
+        stan_img = tk.PhotoImage(file="images/stan_50.png")
+        stan = tk.Checkbutton(cv, image=stan_img, command=self.stanButton)
+        stan.place(anchor='nw', x=120, y=450)
+
+        binge_img = tk.PhotoImage(file="images/binge_50.png")
+        binge = tk.Checkbutton(cv, image=binge_img, command=self.bingeButton)
+        binge.place(anchor='nw', x=240, y=450)
+
+        plex_img = tk.PhotoImage(file="images/plex_50.png")
+        plex = tk.Checkbutton(cv, image=plex_img, command=self.plexButton)
+        plex.place(anchor='nw', x=360, y=450)
 
         # add a done button
-        done = tk.Button(cv, text="Done", command=self.donevar)
-        done.place(anchor='nw', x=720, y=600)
+        done = tk.Button(cv, text="Done", command=self.doneButton)
+        done.place(anchor='nw', x=400, y=600)
 
         self.root.mainloop()
 
-    def netflixvar(self):
+    def netflixButton(self):
         if('NETFLIX' not in self.options):
             self.options.append('NETFLIX')
             print('added Netflix')
         else:
             self.options.remove('NETFLIX')
             print('removed Netflix')
-        # self.root.destroy()
 
-    def youtubevar(self):
+    def youtubeButton(self):
         if('YOUTUBE' not in self.options):
             self.options.append('YOUTUBE')
             print('added Youtube')
         else:
             self.options.remove('YOUTUBE')
             print('removed Youtube')
-        # self.root.destroy()
 
-    def twitchvar(self):
+    def twitchButton(self):
         if('TWITCH' not in self.options):
             self.options.append('TWITCH')
             print('added Twitch')
         else:
             self.options.remove('TWITCH')
             print('removed Twitch')
-        # self.root.destroy()
 
-    def donevar(self):
+    def primeVideoButton(self):
+        if('PRIME' not in self.options):
+            self.options.append('PRIME')
+            print('added Prime')
+        else:
+            self.options.remove('PRIME')
+            print('removed Prime')
+
+    def appleTVButton(self):
+        if('APPLE' not in self.options):
+            self.options.append('APPLE')
+            print('added Apple TV')
+        else:
+            self.options.remove('APPLE')
+            print('removed Apple TV')
+
+    def disneyPlusButton(self):
+        if('DISNEY' not in self.options):
+            self.options.append('DISNEY')
+            print('added Disney')
+        else:
+            self.options.remove('DISNEY')
+            print('removed Disney')
+
+    def stanButton(self):
+        if('STAN' not in self.options):
+            self.options.append('STAN')
+            print('added Stan')
+        else:
+            self.options.remove('STAN')
+            print('removed Stan')
+
+    def bingeButton(self):
+        if('BINGE' not in self.options):
+            self.options.append('BINGE')
+            print('added BINGE')
+        else:
+            self.options.remove('BINGE')
+            print('removed Binge')
+
+    def plexButton(self):
+        if('PLEX' not in self.options):
+            self.options.append('PLEX')
+            print('added Plex')
+        else:
+            self.options.remove('PLEX')
+            print('removed Plex')
+
+    def doneButton(self):
         self.root.destroy()
 
 
