@@ -167,18 +167,18 @@ class AppRouting(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         # get dpid
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
-        self.logger.info("DPID is %s", dpid)
+        # self.logger.info("DPID is %s", dpid)
 
         # nat switch case
         if (int(dpid[14:16]) == 1):
-            self.logger.info("nat switch")
             self.nat_switch(ev)
+            self.logger.info("NAT switch is ready")
         # consumer switch case    
         elif (int(dpid[14:16]) == 2):
-            self.logger.info("Consumer switch")
             self.consumer_switch(ev)
+            self.logger.info("Consumer switch is ready")
         else:
-            self.logger.info("Hit else statment, DPID is %s", dpid)
+            self.logger.info("DPID unrecognised: %s", dpid)
 
     def consumer_switch(self, ev):
         # get switch                                      
@@ -187,7 +187,7 @@ class AppRouting(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         # get dpid
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
-        self.logger.info("DPID is %s", dpid)
+        # self.logger.info("DPID is %s", dpid)
 
         # create flow entries (outgoing to internet)
         matches = []
@@ -216,13 +216,6 @@ class AppRouting(app_manager.RyuApp):
         # add default incoming flow entry
         self.add_flow(datapath, 11, match, action)
 
-        # # create default incoming match to host's IP address
-        # match = parser.OFPMatch(eth_type=0x800, ipv4_src='10.0.1.1')
-        # # create incoming action with priority 10
-        # action = parser.OFPActionOutput(GENERIC_BW_LINK,0)
-        # # add default incoming flow entry
-        # self.add_flow(datapath, 11, match, action)
-
 
         # create default incoming match
         match = parser.OFPMatch()
@@ -238,7 +231,7 @@ class AppRouting(app_manager.RyuApp):
         parser = datapath.ofproto_parser
         # get dpid
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
-        self.logger.info("DPID is %s", dpid)
+        # self.logger.info("DPID is %s", dpid)
 
         # create flow entries (incoming to nat switch)
         matches = []
