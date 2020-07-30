@@ -5,6 +5,11 @@ from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
 from ryu.lib.packet import packet, ethernet, ether_types, ipv4
 
+# GUI Tkinter packages
+import Tkinter as tk
+from Tkinter import *
+import tkMessageBox
+
 HIGH_BW_LINK = 3
 GENERIC_BW_LINK = 2
 HOST_LINK = 1
@@ -16,6 +21,73 @@ class AppRouting(app_manager.RyuApp):
 
     def __init__(self, *args, **kwargs):
         super(AppRouting, self).__init__(*args, **kwargs)
+
+        # GUI
+        self.options = []
+
+        self.root = tk.Tk()
+        self.root.title("Select video streaming applications to prioritise")
+
+        bgimage = tk.PhotoImage(file = "images/background_1.png")
+        w = bgimage.width()
+        h = bgimage.height()
+        self.root.geometry("%dx%d+50+30" % (w,h))
+        ## Create canvas for background image
+        cv = tk.Canvas(width=w, height=h)
+        cv.pack(side='top', fill='both', expand='yes')
+        # cv.create_image(0, 0, image=bgimage, anchor='nw')
+        cv.create_image(0, 0, anchor='nw')
+
+        ## Create buttons
+        netflix_img = tk.PhotoImage(file="images/netflix.png")
+        netflix = tk.Checkbutton(cv, image=netflix_img, command=self.netflixvar)
+        netflix.place(anchor='nw', x=120, y=250)
+
+        youtube_img = tk.PhotoImage(file="images/youtube.png")
+        youtube = tk.Checkbutton(cv, image=youtube_img, command=self.youtubevar)
+        youtube.place(anchor='nw', x=400, y=250)
+
+        twitch_img = tk.PhotoImage(file="images/twitch.png")
+        twitch = tk.Checkbutton(cv, image=twitch_img, command=self.twitchvar)
+        twitch.place(anchor='nw', x=720, y=250)
+
+        # add a done button
+        done = tk.Button(cv, text="Done", command=self.donevar)
+        done.place(anchor='nw', x=720, y=600)
+
+        self.root.mainloop()
+
+    def netflixvar(self):
+        if('NETFLIX' not in self.options):
+            self.options.append('NETFLIX')
+            print('added Netflix')
+        else:
+            self.options.remove('NETFLIX')
+            print('removed Netflix')
+        # self.root.destroy()
+
+    def youtubevar(self):
+        if('YOUTUBE' not in self.options):
+            self.options.append('YOUTUBE')
+            print('added Youtube')
+        else:
+            self.options.remove('YOUTUBE')
+            print('removed Youtube')
+        # self.root.destroy()
+
+    def twitchvar(self):
+        if('TWITCH' not in self.options):
+            self.options.append('TWITCH')
+            print('added Twitch')
+        else:
+            self.options.remove('TWITCH')
+            print('removed Twitch')
+        # self.root.destroy()
+
+    def donevar(self):
+        self.root.destroy()
+
+
 
     #event handler for new switches
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)            
