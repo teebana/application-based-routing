@@ -10,12 +10,22 @@ class Application(Frame):
         #self.create_widgets()
 
         #root = Tk()
-        canvas = Canvas(root, width = 1000, height = 1080)
+        # scrollbar = Scrollbar(root)
+        # scrollbar.pack(side=RIGHT, fill=Y)
+        canvas = Canvas(root, width = 1000, height = 1440)
         canvas.pack()
-        img = ImageTk.PhotoImage(Image.open("assets/logo.jpg"), master=canvas)
+        #logo_img = ImageTk.PhotoImage(Image.open("assets/logo.jpg"), master=canvas)
+        netflix_img = ImageTk.PhotoImage(Image.open("assets/netflix.jpg"), master=canvas)
+        twitch_img = ImageTk.PhotoImage(Image.open("assets/twitch.jpg"), master=canvas)
+        youtube_img = ImageTk.PhotoImage(Image.open("assets/youtube.jpg"), master=canvas)
         #canvas.create_image(640,412, anchor=S, image=img)
 
-        canvas.netflix = Checkbutton(root, image = img, command = self.say_hi)
+        netflix = Checkbutton(root, image = netflix_img, command = self.say_hi, text="Netflix")
+        netflix.pack(anchor='e', padx=1,pady=1)
+        twitch = Checkbutton(root, image = twitch_img, command = self.say_hi, text="Twitch")
+        twitch.pack(anchor='e', padx=1,pady=1)
+        youtube = Checkbutton(root, image = youtube_img, command = self.say_hi, text="Youtube")
+        youtube.pack(anchor='e', padx=1,pady=1)
         root.mainloop()
 
     def create_widgets(self):
