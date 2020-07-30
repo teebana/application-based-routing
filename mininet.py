@@ -8,6 +8,11 @@ from mininet.log import setLogLevel
 from mininet.cli import CLI
 import time
 
+# GUI Tkinter packages
+import Tkinter as tk
+from Tkinter import *
+import tkMessageBox
+
 class ProjTopo(Topo):
 
 	def build(self, h = 1):
@@ -33,6 +38,17 @@ class ProjTopo(Topo):
 		self.addLink(s2, host, cls = TCLink, port1=1)
 
 
+def GUI():
+	root = tk.Tk()
+	root.title("Flow tables of network switches")
+	root.geometry("%dx%d+50+30" % (650,650))
+	height = 5
+	width = 5
+	for i in range(height): #Rows
+		for j in range(width): #Columns
+			b = Entry(root, text="row: %d, column: %d" % (i, j))
+			b.grid(row=i, column=j)
+
 def simpleTest():
 
 	topo = ProjTopo()
@@ -43,15 +59,17 @@ def simpleTest():
 
 	CLI(net)
 
-	while(1):
+	GUI()
 
-		s1_flows = net.switches[0].cmd('ovs-ofctl dump-flows s1')
-		s2_flows = net.switches[1].cmd('ovs-ofctl dump-flows s2')
+	# while(1):
 
-		print(s1_flows)
-		print(s2_flows)
+	# 	s1_flows = net.switches[0].cmd('ovs-ofctl dump-flows s1')
+	# 	s2_flows = net.switches[1].cmd('ovs-ofctl dump-flows s2')
 
-		time.sleep(5)
+	# 	print(s1_flows)
+	# 	print(s2_flows)
+
+	# 	time.sleep(5)
 
 
 
