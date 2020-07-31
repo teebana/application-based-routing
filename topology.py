@@ -86,9 +86,9 @@ def update():
     flow_property_1 = []
     flow_property_2 = []
     for flow in s1_flows:
-        flow_property_1.append(flow.replace(","," ").split(' '))
+        flow_property_1.append(flow.replace(","," ").replace("\r","").split(' '))
     for flow in s2_flows:
-        flow_property_2.append(flow.replace(","," ").split(' '))
+        flow_property_2.append(flow.replace(","," ").replace("\r","").split(' '))
     # remove empty strings from list
     for i in range(0,len(flow_property_1)):
         while '' in flow_property_1[i]:
@@ -106,30 +106,42 @@ def update():
     print(flow_property_1)
     print(flow_property_2)
     print(" ")
-    # print(" %s  | %s  | %s  | %s  | match=%s %s | %s  " % (flow_property_1[0][1], flow_property_1[0][3], flow_property_1[0][4], flow_property_1[0][5], flow_property_1[0][6], flow_property_1[0][7], flow_property_1[0][8]))
     
     # add flow entries for switch 1
     for i in range(0,6): 
         if (len(flow_property_1[i]) == 10):
-            s1_table_new.append("%s | %s | %s | Match: (Protocol: %s, %s, %s) | %s | %s" %(flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][8], flow_property_1[9], flow_property_1[i][3], flow_property_1[i][4]))
+            print(i)
+            s1_table_new.append("%s | %s | Match: (Protocol: %s, %s, %s)| %s | %s | %s\n" % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][8], flow_property_1[i][9], flow_property_1[i][3], flow_property_1[i][4]))
         elif (len(flow_property_1[i]) == 8):
-            s1_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][3], flow_property_1[i][4]))
+            s1_table_new.append("%s | %s | Match: (%s) | %s | %s | %s\n" % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][3], flow_property_1[i][4]))
         elif (len(flow_property_1[i]) == 7):
-            s1_table_new.append("%s | %s | Match: (None) | %s | %s | %s", % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][3], flow_property_1[i][4]))
+            s1_table_new.append("%s | %s | Match: (None) | %s | %s | %s\n" % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][3], flow_property_1[i][4]))
     # add flow entries for switch 2
     for i in range(0, 7):
         if(len(flow_property_2[i]) == 9):
-            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][3], flow_property_2[i][4]))
+            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s\n" % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][3], flow_property_2[i][4]))
         elif(len(flow_property_2[i]) == 10):
-            s2_table_new.append("%s | %s | Match: (Protocol: %s, %s, %s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][9], flow_property_2[i][3], flow_property_2[i][4]))
+            s2_table_new.append("%s | %s | Match: (Protocol: %s, %s, %s) | %s | %s | %s\n" % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][9], flow_property_2[i][3], flow_property_2[i][4]))
         elif(len(flow_property_2[i]) == 8):
-            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][3], flow_property_2[i][4]))
+            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s\n" % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][3], flow_property_2[i][4]))
         elif(len(flow_property_2[i]) == 7):
-            s2_table_new.append("%s | %s | Match: (None) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][3], flow_property_2[i][4]))
+            s2_table_new.append("%s | %s | Match: (None) | %s | %s | %s\n" % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][3], flow_property_2[i][4]))
 
 
-    s1_lbl.config(text=s1_table_new)
-    s2_lbl.config(text=s2_table_new)
+    s1_lbl_1.config(text=s1_table_new[0])
+    s1_lbl_2.config(text=s1_table_new[1])
+    s1_lbl_3.config(text=s1_table_new[2])
+    s1_lbl_4.config(text=s1_table_new[3])
+    s1_lbl_5.config(text=s1_table_new[4])
+    s1_lbl_6.config(text=s1_table_new[5])
+
+    s2_lbl_1.config(text=s2_table_new[0])
+    s2_lbl_2.config(text=s2_table_new[1])
+    s2_lbl_3.config(text=s2_table_new[2])
+    s2_lbl_4.config(text=s2_table_new[3])
+    s2_lbl_5.config(text=s2_table_new[4])
+    s2_lbl_6.config(text=s2_table_new[5])
+    s2_lbl_7.config(text=s2_table_new[6])
 
     root.after(1000, update)
 
@@ -151,15 +163,39 @@ if __name__ == '__main__':
     root.title("Flow tables of network switches")
     root.geometry("%dx%d+50+30" % (650,650))
 
-    cv = tk.Canvas(width=650, height=650)
+    cv = tk.Canvas(width=1500, height=1500)
     cv.pack(side='top', fill='both', expand='yes')
     cv.create_image(0, 0, anchor='nw')
 
-    s1_lbl = Label(root, text='0')
-    s2_lbl = Label(root, text='0')
+    s1_lbl_1 = Label(root, text='0')
+    s1_lbl_2 = Label(root, text='0')
+    s1_lbl_3 = Label(root, text='0')
+    s1_lbl_4 = Label(root, text='0')
+    s1_lbl_5 = Label(root, text='0')
+    s1_lbl_6 = Label(root, text='0')
 
-    s1_lbl.place(x=120, y=25)
-    s2_lbl.place(x=120, y=300)
+    s2_lbl_1 = Label(root, text='0')
+    s2_lbl_2 = Label(root, text='0')
+    s2_lbl_3 = Label(root, text='0')
+    s2_lbl_4 = Label(root, text='0')
+    s2_lbl_5 = Label(root, text='0')
+    s2_lbl_6 = Label(root, text='0')
+    s2_lbl_7 = Label(root, text='0')
+
+    s1_lbl_1.place(x=120, y=25)
+    s1_lbl_2.place(x=120, y=65)
+    s1_lbl_3.place(x=120, y=105)
+    s1_lbl_4.place(x=120, y=145)
+    s1_lbl_5.place(x=120, y=185)
+    s1_lbl_6.place(x=120, y=225)
+
+    s2_lbl_1.place(x=120, y=300)
+    s2_lbl_2.place(x=120, y=340)
+    s2_lbl_3.place(x=120, y=380)
+    s2_lbl_4.place(x=120, y=420)
+    s2_lbl_5.place(x=120, y=460)
+    s2_lbl_6.place(x=120, y=500)
+    s2_lbl_7.place(x=120, y=540)
 
     done = tk.Button(cv, text="Done", command=doneButton)
     done.place(x=400, y=600)
