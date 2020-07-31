@@ -189,12 +189,15 @@ class AppRouting(app_manager.RyuApp):
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
         # self.logger.info("DPID is %s", dpid)
 
+        prefix = "45.57.70.0"
+        mask = "255.255.254.0"
         # create flow entries (outgoing to internet)
         matches = []
-        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=443, ip_proto=0x11))
-        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=80, ip_proto=0x11))
-        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06))
-        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=80, ip_proto=0x06))
+        # matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=443, ip_proto=0x11))
+        # matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, udp_dst=80, ip_proto=0x11))
+        matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(prefix,mask)))
+        # matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=80, ipv4_dst=(prefix,mask)))
+        #add netflix link
 
         # create action entry (outgoing)
         action = parser.OFPActionOutput(HIGH_BW_LINK,0)
@@ -233,12 +236,16 @@ class AppRouting(app_manager.RyuApp):
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
         # self.logger.info("DPID is %s", dpid)
 
+        # netflix subnet 
+        prefix = "45.57.70.0"
+        mask = "255.255.254.0"
+
         # create flow entries (incoming to nat switch)
         matches = []
-        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=443, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=80, ip_proto = 0x11))
-        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto = 0x06))
-        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=80, ip_proto = 0x06))
+        # matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=443, ip_proto = 0x11))
+        # matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, udp_src=80, ip_proto = 0x11))
+        matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(prefix,mask)))
+        # matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=80, ipv4_src=(prefix,mask)))
 
 
         # create action entry (incoming)
