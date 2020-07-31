@@ -77,10 +77,46 @@ def GUI(net):
 
 def update():
 
-    s1_flows = net.switches[0].cmd('ovs-ofctl dump-flows s1')
-    s2_flows = net.switches[1].cmd('ovs-ofctl dump-flows s2')
-    s1_lbl.config(text=s1_flows)
-    s2_lbl.config(text=s2_flows)
+    s1_table = net.switches[0].cmd('ovs-ofctl dump-flows s1')
+    s2_table = net.switches[1].cmd('ovs-ofctl dump-flows s2')
+    # split tables by "\n" into separate entries
+    s1_flows = s1_table.split('\n')
+    s2_flows = s2_table.split('\n')
+    # split flows by "," into separate properties
+    flow_property_1 = []
+    flow_property_2 = []
+    for flow in s1_flows:
+        flow_property_1.append(flow.replace(","," ").split(' '))
+    for flow in s2_flows:
+        flow_property_2.append(flow.replace(","," ").split(' '))
+    # remove empty strings from list
+    for i in range(0,len(flow_property_1)):
+        while '' in flow_property_1[i]:
+            flow_property_1[i].remove('')
+    for i in range(0,len(flow_property_2)):
+        while '' in flow_property_2[i]:
+            flow_property_2[i].remove('')
+
+
+    # reconstruct table with properties that we want
+    s1_table_new = []
+    s1_table_new.append('Switch 1 Flow Table\n')
+    s2_table_new = []
+    s2_table_new.append('Switch 2 Flow Table\n')
+    print(flow_property_1)
+    print(flow_property_2)
+    print(" ")
+    print(" %s  | %s  | %s  | %s  | match=%s %s | %s  " % (flow_property_1[0][1], flow_property_1[0][3], flow_property_1[0][4], flow_property_1[0][5], flow_property_1[0][6], flow_property_1[0][7], flow_property_1[0][8]))
+    
+    for i in range(0,5): 
+        if (len(flow_property_1[i]) == 10):
+            s1_table_new.append()
+
+    for i in range(0,6):
+        s2_table_new.append("%s  | %s  | %s  | %s  | %s  | %s  | %s" % (flow_property_2[i][1], flow_property_2[i][3], flow_property_2[i][4], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][8]))
+
+    s1_lbl.config(text=s1_table_new)
+    s2_lbl.config(text=s2_table_new)
 
     root.after(1000, update)
 
