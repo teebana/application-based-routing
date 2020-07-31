@@ -106,14 +106,27 @@ def update():
     print(flow_property_1)
     print(flow_property_2)
     print(" ")
-    print(" %s  | %s  | %s  | %s  | match=%s %s | %s  " % (flow_property_1[0][1], flow_property_1[0][3], flow_property_1[0][4], flow_property_1[0][5], flow_property_1[0][6], flow_property_1[0][7], flow_property_1[0][8]))
+    # print(" %s  | %s  | %s  | %s  | match=%s %s | %s  " % (flow_property_1[0][1], flow_property_1[0][3], flow_property_1[0][4], flow_property_1[0][5], flow_property_1[0][6], flow_property_1[0][7], flow_property_1[0][8]))
     
-    for i in range(0,5): 
+    # add flow entries for switch 1
+    for i in range(0,6): 
         if (len(flow_property_1[i]) == 10):
-            s1_table_new.append()
+            s1_table_new.append("%s | %s | %s | Match: (Protocol: %s, %s, %s) | %s | %s" %(flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][8], flow_property_1[9], flow_property_1[i][3], flow_property_1[i][4]))
+        elif (len(flow_property_1[i]) == 8):
+            s1_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][7], flow_property_1[i][3], flow_property_1[i][4]))
+        elif (len(flow_property_1[i]) == 7):
+            s1_table_new.append("%s | %s | Match: (None) | %s | %s | %s", % (flow_property_1[i][1], flow_property_1[i][5], flow_property_1[i][6], flow_property_1[i][3], flow_property_1[i][4]))
+    # add flow entries for switch 2
+    for i in range(0, 7):
+        if(len(flow_property_2[i]) == 9):
+            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][3], flow_property_2[i][4]))
+        elif(len(flow_property_2[i]) == 10):
+            s2_table_new.append("%s | %s | Match: (Protocol: %s, %s, %s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][8], flow_property_2[i][9], flow_property_2[i][3], flow_property_2[i][4]))
+        elif(len(flow_property_2[i]) == 8):
+            s2_table_new.append("%s | %s | Match: (%s) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][3], flow_property_2[i][4]))
+        elif(len(flow_property_2[i]) == 7):
+            s2_table_new.append("%s | %s | Match: (None) | %s | %s | %s", % (flow_property_2[i][1], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][3], flow_property_2[i][4]))
 
-    for i in range(0,6):
-        s2_table_new.append("%s  | %s  | %s  | %s  | %s  | %s  | %s" % (flow_property_2[i][1], flow_property_2[i][3], flow_property_2[i][4], flow_property_2[i][5], flow_property_2[i][6], flow_property_2[i][7], flow_property_2[i][8]))
 
     s1_lbl.config(text=s1_table_new)
     s2_lbl.config(text=s2_table_new)
