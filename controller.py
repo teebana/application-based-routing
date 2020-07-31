@@ -189,17 +189,23 @@ class AppRouting(app_manager.RyuApp):
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
         # self.logger.info("DPID is %s", dpid)
 
-        prefix = "45.57.70.0"
-        mask = "255.255.254.0"
+        # add netflix prefix/mask
+        netflix_prefix = "45.57.70.0"
+        netflix_mask = "255.255.254.0"
+
+        # add youtube prefix/mask
+        youtube_prefix = "180.150.2.0"
+        youtube_mask = "255.255.254.0"
+
         # create flow entries (outgoing to internet)
         matches = []
         if('NETFLIX' in self.options):
             # netflix priority match
             print("prioritising netflix")
-            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(prefix,mask)))
+            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(netflix_prefix,netflix_mask)))
         if('YOUTUBE' in self.options):
             # youtube priority match
-            ##
+            #matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(youtube_prefix,youtube_mask)))
             print("prioritising youtube")
 
         # create action entry (outgoing)
@@ -239,9 +245,13 @@ class AppRouting(app_manager.RyuApp):
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
         # self.logger.info("DPID is %s", dpid)
 
-        # netflix subnet 
-        prefix = "45.57.70.0"
-        mask = "255.255.254.0"
+        # add netflix prefix/mask
+        netflix_prefix = "45.57.70.0"
+        netflix_mask = "255.255.254.0"
+
+        # add youtube prefix/mask
+        youtube_prefix = "180.150.2.0"
+        youtube_mask = "255.255.254.0"
 
         # create flow entries (incoming to nat switch)
         matches = []
@@ -249,13 +259,13 @@ class AppRouting(app_manager.RyuApp):
         if('NETFLIX' in self.options):
             # prioritising netflix
             print("prioritising netflix")
-            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(prefix,mask)))
+            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(netflix_prefix,netflix_mask)))
         
         if('YOUTUBE' in self.options):
             # prioritising youtube
             print("prioritising youtube")
             # youtube entry
-            ##
+            #matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(youtube_prefix,youtube_mask)))
 
         # create action entry (incoming)
         actions = parser.OFPActionOutput(HIGH_BW_LINK,0)
