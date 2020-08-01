@@ -172,11 +172,11 @@ class AppRouting(app_manager.RyuApp):
         # nat switch case
         if (int(dpid[14:16]) == 1):
             self.nat_switch(ev)
-            self.logger.info("NAT switch is ready")
+            self.logger.info("NAT switch is ready!\n")
         # consumer switch case    
         elif (int(dpid[14:16]) == 2):
             self.consumer_switch(ev)
-            self.logger.info("Consumer switch is ready")
+            self.logger.info("Host switch is ready!\n")
         else:
             self.logger.info("DPID unrecognised: %s", dpid)
 
@@ -190,8 +190,10 @@ class AppRouting(app_manager.RyuApp):
         # self.logger.info("DPID is %s", dpid)
 
         # add netflix prefix/mask
-        netflix_prefix = "45.57.70.0"
-        netflix_mask = "255.255.254.0"
+        netflix_prefix_1 = "45.57.70.0"
+        netflix_prefix_2 = "103.2.116.0"
+        netflix_mask_1 = "255.255.254.0"
+        netflix_mask_2 = "255.255.252.0"
 
         # add youtube prefix/mask
         youtube_prefix = "180.150.2.0"
@@ -201,12 +203,13 @@ class AppRouting(app_manager.RyuApp):
         matches = []
         if('NETFLIX' in self.options):
             # netflix priority match
-            print("prioritising netflix")
-            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(netflix_prefix,netflix_mask)))
+            print("Prioritising Netflix...")
+            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(netflix_prefix_1,netflix_mask_1)))
+            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(netflix_prefix_2,netflix_mask_2)))
         if('YOUTUBE' in self.options):
             # youtube priority match
-            #matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(youtube_prefix,youtube_mask)))
-            print("prioritising youtube")
+            matches.append(parser.OFPMatch(in_port=HOST_LINK, eth_type=0x800, tcp_dst=443, ip_proto=0x06, ipv4_dst=(youtube_prefix,youtube_mask)))
+            print("Prioritising Youtube...")
 
         # create action entry (outgoing)
         action = parser.OFPActionOutput(HIGH_BW_LINK,0)
@@ -246,8 +249,10 @@ class AppRouting(app_manager.RyuApp):
         # self.logger.info("DPID is %s", dpid)
 
         # add netflix prefix/mask
-        netflix_prefix = "45.57.70.0"
-        netflix_mask = "255.255.254.0"
+        netflix_prefix_1 = "45.57.70.0"
+        netflix_prefix_2 = "103.2.116.0"
+        netflix_mask_1 = "255.255.254.0"
+        netflix_mask_2 = "255.255.252.0"
 
         # add youtube prefix/mask
         youtube_prefix = "180.150.2.0"
@@ -258,14 +263,14 @@ class AppRouting(app_manager.RyuApp):
 
         if('NETFLIX' in self.options):
             # prioritising netflix
-            print("prioritising netflix")
-            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(netflix_prefix,netflix_mask)))
-        
+            print("Prioritising Netflix...")
+            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(netflix_prefix_1,netflix_mask_1)))
+            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(netflix_prefix_2,netflix_mask_2)))
         if('YOUTUBE' in self.options):
             # prioritising youtube
-            print("prioritising youtube")
+            print("Prioritising Youtube...")
             # youtube entry
-            #matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(youtube_prefix,youtube_mask)))
+            matches.append(parser.OFPMatch(in_port=INTERNET_LINK, eth_type=0x800, tcp_src=443, ip_proto=0x06, ipv4_src=(youtube_prefix,youtube_mask)))
 
         # create action entry (incoming)
         actions = parser.OFPActionOutput(HIGH_BW_LINK,0)

@@ -164,7 +164,7 @@ if __name__ == '__main__':
     CLI(net)
     root = tk.Tk()
     root.title("Flow tables of network switches")
-    root.geometry("%dx%d+50+30" % (650,650))
+    root.geometry("%dx%d+50+30" % (1920,1080))
 
     cv = tk.Canvas(width=1500, height=1500)
     cv.pack(side='top', fill='both', expand='yes')
@@ -200,14 +200,20 @@ if __name__ == '__main__':
     # s2_lbl_6.place(x=120, y=500)
     # s2_lbl_7.place(x=120, y=540)
 
+    nat_switch_heading = Label(root, text="Nat Switch Flow Table", font=('Helvetica', 18, 'bold'))
+    host_switch_heading = Label(root, text="Host Switch Flow Table", font=('Helvetica', 18, 'bold'))
+
+    nat_switch_heading.place(x=480, y=5)
+    host_switch_heading.place(x=480, y=280)
+
     s1_lbl = Label(root, text='0')
-    s1_lbl.place(x=120, y=25)
+    s1_lbl.place(x=20, y=50)
 
     s2_lbl = Label(root, text='0')
-    s2_lbl.place(x=120, y=300)
+    s2_lbl.place(x=20, y=325)
 
     done = tk.Button(cv, text="Done", command=doneButton)
-    done.place(x=400, y=600)
+    done.place(x=580, y=600)
 
     root.after(1000, update)
 
