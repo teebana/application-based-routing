@@ -27,16 +27,14 @@ class AppRouting(app_manager.RyuApp):
 
         self.root = tk.Tk()
         self.root.title("Application-based routing")
-
-        bgimage = tk.PhotoImage(file = "images/background_1.png")
-        w = bgimage.width()
-        h = bgimage.height()
-        self.root.geometry("%dx%d+50+30" % (650,h))
+        self.root.geometry("%dx%d+50+30" % (650,787))
         # Create canvas for background image
-        cv = tk.Canvas(width=w, height=h)
+        cv = tk.Canvas(width=650, height=787)
         cv.pack(side='top', fill='both', expand='yes')
-        # cv.create_image(0, 0, image=bgimage, anchor='nw')
         cv.create_image(0, 0, anchor='nw')
+
+        heading_lbl = Label(self.root, text="Choose the streaming services you wish to prioritise", font=('Helvetica', 18, 'bold'))
+        heading_lbl.place(x=25, y=120)
 
         # Create buttons
         netflix_img = tk.PhotoImage(file="images/netflix_50.png")
@@ -169,6 +167,7 @@ class AppRouting(app_manager.RyuApp):
         dpid = str(hex(datapath.id))[2:].zfill(16)                            
         # self.logger.info("DPID is %s", dpid)
 
+        self.logger.info("\n")
         # nat switch case
         if (int(dpid[14:16]) == 1):
             self.nat_switch(ev)
