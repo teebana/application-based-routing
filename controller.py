@@ -28,6 +28,7 @@ class AppRouting(app_manager.RyuApp):
         self.root = tk.Tk()
         self.root.title("Application-based routing")
         self.root.geometry("%dx%d+50+30" % (650,787))
+        
         # Create canvas for background image
         cv = tk.Canvas(width=650, height=787)
         cv.pack(side='top', fill='both', expand='yes')
